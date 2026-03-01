@@ -1,3 +1,5 @@
+
+
 # AWS EC2 Ubuntu Web Server Deployment
 
 ## Overview
@@ -28,3 +30,6 @@ Configured SSH access, security groups, and served a custom static website over 
 ```bash
 chmod 600 cloud-key.pem
 ssh -i cloud-key.pem ubuntu@<public-ip>
+## Screenshot
+
+![Live Website](screenshots/nginx-live.png)
