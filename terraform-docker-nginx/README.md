@@ -54,6 +54,20 @@ I tested the deployment in three ways:
 - why Docker port mapping is needed
 - how Terraform can automate both infrastructure and software setup
 
+## Screenshots
+
+### Terraform apply
+![Terraform apply](Screenshots/terraform%20apply.PNG)
+
+### Live website
+![Live website](Screenshots/nginx%20docker%20website%20pic.PNG)
+
+### Docker container running
+![Docker container running](Screenshots/docker%20ps.PNG)
+
+### Local test from EC2
+![curl localhost](Screenshots/curl%20host.PNG)
+
 
 
 
