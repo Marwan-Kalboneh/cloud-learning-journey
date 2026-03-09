@@ -32,3 +32,23 @@ terraform init
 terraform plan
 terraform apply
 terraform destroy
+
+Result
+
+After running terraform apply, Terraform created the infrastructure and returned the public IP.
+
+I then opened the IP in the browser and checked that the website was working.
+
+After testing, I used terraform destroy to remove the resources.
+
+What I learned:
+
+1-the basic Terraform workflow
+
+2-how Terraform can be used with AWS
+
+3-how to create EC2 instances and security groups from code
+
+4-how user_data can automate server setup
+
+5-the difference between manual deployment and Infrastructure as Code
