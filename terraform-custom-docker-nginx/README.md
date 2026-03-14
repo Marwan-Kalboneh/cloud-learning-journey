@@ -2,63 +2,49 @@
 
 ## About
 
-This project is the next step after my Terraform EC2 + Docker + Nginx project.
+This project builds on my previous Terraform EC2 + Docker + Nginx project.
 
-In the previous project, I used Terraform to create the EC2 instance and security group, then used `user_data` to install Docker automatically and run the default Nginx container.
-
-In this project, I went one step further by building a custom Docker image based on Nginx and serving my own HTML page instead of the default Nginx welcome page.
-
-The main goal of this project was to understand the difference between running a ready-made Docker image and building my own image with custom content.
+In the last one I was just running the default Nginx container. This time I 
+went a step further and built my own Docker image to serve a custom HTML page 
+instead. I wanted to understand what it actually takes to go from running a 
+ready-made image to building and serving your own content.
 
 ## What it does
 
-This project:
-- creates a security group
-- opens port 22 for SSH
-- opens port 80 for HTTP
-- launches an EC2 instance
-- installs Docker automatically with `user_data`
-- creates a custom `index.html`
-- creates a `Dockerfile`
-- builds a custom Docker image
-- runs the custom Nginx container
-- shows the public IP and website URL as outputs
+- Creates a security group with ports 22 and 80 open
+- Launches an EC2 instance
+- Uses user_data to automatically install Docker on the instance
+- Creates a custom Dockerfile and index.html on the instance
+- Builds the Docker image and runs the container
+- Outputs the public IP and website URL
 
 ## Files
 
-- `main.tf`
-- `variables.tf`
-- `outputs.tf`
-- `README.md`
+- main.tf
+- variables.tf
+- outputs.tf
+- README.md
 
-## Commands used
-```bash
-terraform init
-terraform plan
-terraform apply
-terraform destroy
-```
 
 ## Result
 
-> After running `terraform apply`, Terraform created the EC2 instance and security group and returned the public IP and website URL. The EC2 instance then ran the `user_data` script automatically, which installed Docker, created the custom website files, built the Docker image, and launched the container.
+Once terraform apply finished, the EC2 instance started and the user_data 
+script ran automatically. It installed Docker, created the Dockerfile and 
+HTML file, built the image, and launched the container — no manual steps needed.
 
-I tested the deployment in four ways:
-- opened the public IP in the browser and saw my custom page
-- used `sudo docker ps` to confirm the container was running
-- used `sudo docker images` to confirm the custom image was built
-- used `curl localhost` on the EC2 instance to confirm the server was serving the page locally
+To confirm everything worked I tested it a few ways:
+
+- Opened the public IP in the browser and saw the custom page
+- Ran sudo docker ps to confirm the container was running
+- Ran sudo docker images to confirm the image was built successfully
+- Ran curl localhost on the EC2 instance to test it was serving locally
 
 ## What I learned
 
-> This project helped me understand how to go beyond just running containers and start building and serving my own content with Docker and Terraform.
-
-- how to build a custom Docker image based on Nginx
-- the difference between running the default Nginx image and serving my own custom page
-- how `user_data` can automate both infrastructure setup and deployment steps
-- why port 80 must be open in the security group
-- why Docker port mapping is needed
-- how Terraform can automate both infrastructure and application setup
+- How to write a Dockerfile and build a custom image
+- The difference between pulling a default image and building your own
+- How user_data can automate the full setup, not just the infrastructure part
+- Why port 80 needs to be open and how Docker port mapping works
 
 ## Screenshots
 
