@@ -78,19 +78,19 @@ To confirm everything worked I tested it a few ways:
 ## Screenshots
 
 ### Terraform apply
-![Terraform apply](Screenshots/terraform-apply-p5.png)
+![Terraform apply](Screenshots/terraform-apply-p5.PNG)
 
 ### ECR repository with image
-![ECR repo](Screenshots/ecr-repo.png)
+![ECR repo](Screenshots/ECR%20REPO.PNG)
 
 ### Docker push to ECR
-![Docker push](Screenshots/docker-push.png)
+![Docker push](Screenshots/docker%20push.PNG)
 
 ### Custom page live
-![Custom page](Screenshots/browser-page.png)
+![Custom page](Screenshots/browser-page.PNG)
 
 ### Docker container running on EC2
-![Docker ps](Screenshots/docker-ps.png)
+![Docker ps](Screenshots/docker%20ps.PNG)
 
 ### Docker image pulled on EC2
-![Docker images](Screenshots/docker-images.png)
+![Docker images](Screenshots/docker%20images.PNG)
