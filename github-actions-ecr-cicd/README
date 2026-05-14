@@ -1,0 +1,167 @@
+# Terraform AWS VPC + Docker + GitHub Actions CI/CD
+
+## About
+
+This project demonstrates a complete CI/CD workflow using GitHub Actions, Docker, and Amazon ECR.
+
+The goal of this project was to automate the container image delivery process instead of manually building and pushing Docker images.
+
+Whenever code is pushed to the GitHub repository:
+
+- GitHub Actions automatically starts
+- The Docker image is built
+- GitHub authenticates securely with AWS using OIDC
+- The image is pushed automatically to Amazon ECR
+
+This project builds on the previous projects where Docker images were built and pushed manually.
+
+---
+
+# Technologies Used
+
+- AWS ECR
+- GitHub Actions
+- Docker
+- IAM Roles
+- OIDC Authentication
+- Linux / WSL Ubuntu
+- GitHub
+- Nginx
+
+---
+
+# Project Structure
+
+```bash
+.
+├── .github
+│   └── workflows
+│       └── build-and-push.yml
+│
+├── github-actions-ecr-cicd
+│   ├── Dockerfile
+│   └── app
+│       └── index.html
+```
+
+---
+
+# How the Pipeline Works
+
+```text
+Code Push
+   ↓
+GitHub Actions Triggered
+   ↓
+Docker Image Built
+   ↓
+Authenticate to AWS using OIDC
+   ↓
+Push Image to Amazon ECR
+```
+
+---
+
+# Workflow Explanation
+
+## 1. GitHub Actions Workflow
+
+The workflow file is stored in:
+
+```text
+.github/workflows/build-and-push.yml
+```
+
+This is required because GitHub only detects workflows from this location.
+
+The workflow automatically runs on every push to the `main` branch.
+
+---
+
+## 2. Docker Build
+
+GitHub Actions builds the Docker image automatically using the Dockerfile inside:
+
+```text
+github-actions-ecr-cicd/
+```
+
+The Docker image contains a simple Nginx website.
+
+---
+
+## 3. AWS Authentication
+
+Instead of storing AWS credentials inside GitHub Secrets, this project uses:
+
+- IAM Role
+- OIDC Authentication
+
+This allows GitHub Actions to securely authenticate to AWS temporarily without permanent credentials.
+
+---
+
+## 4. Push to Amazon ECR
+
+After the image is built:
+
+- GitHub logs into Amazon ECR
+- Tags the Docker image
+- Pushes the image automatically
+
+The image is then stored in:
+
+```text
+Amazon ECR Repository
+```
+
+---
+
+# Screenshots
+
+## GitHub Actions Successful Pipeline
+
+![GitHub Actions](screenshots/01-github-actions-success.png)
+
+---
+
+## Workflow Logs
+
+![Workflow Logs](screenshots/02-workflow-logs.png)
+
+---
+
+## Docker Image in Amazon ECR
+
+![Amazon ECR](screenshots/03-ecr-image.png)
+
+---
+
+# What I Learned
+
+- GitHub Actions basics
+- CI/CD pipeline structure
+- Workflow automation
+- OIDC authentication with AWS
+- IAM roles for GitHub Actions
+- Docker build automation
+- Amazon ECR integration
+- Debugging CI/CD pipelines
+- Proper GitHub workflow structure
+
+---
+
+# Future Improvements
+
+- Automatic deployment to EC2 after image push
+- Multi-container deployments
+- ECS or Kubernetes deployment
+- Monitoring and logging
+- Terraform automation for the CI/CD infrastructure
+
+---
+
+# Author
+
+Marwan Kalboneh
+Computer Science Student — Budapest University of Technology and Economics
