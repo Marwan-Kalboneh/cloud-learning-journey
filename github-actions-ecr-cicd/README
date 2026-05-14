@@ -1,140 +1,28 @@
-# GitHub Actions + Amazon ECR CI/CD Pipeline
+# GitHub Actions + Amazon ECR CI/CD
 
 ## About
 
-This project demonstrates a complete CI/CD workflow using GitHub Actions, Docker, and Amazon ECR.
+In this project, I automated the Docker image build and push process using GitHub Actions and Amazon ECR.
 
-The goal of this project was to automate the Docker image build and delivery process instead of manually building and pushing images.
+In my previous ECR project, I built the Docker image locally from WSL and pushed it to ECR manually. That worked, but it was not a real CI/CD flow. In this project, I wanted to make the process closer to how teams actually work: push code to GitHub, let the workflow build the image, and store the image in a container registry automatically.
 
-Whenever code is pushed to the GitHub repository:
+## What this project does
 
-- GitHub Actions automatically starts
-- The Docker image is built
-- GitHub authenticates securely with AWS using OIDC
-- The image is pushed automatically to Amazon ECR
+When I push changes to the `main` branch:
 
-This project builds on previous Docker and Terraform projects by introducing CI/CD automation.
+1. GitHub Actions starts the workflow
+2. The workflow checks out the repository code
+3. Docker builds an nginx image using the project Dockerfile
+4. GitHub Actions authenticates to AWS using an IAM role and OIDC
+5. The Docker image is tagged with the ECR repository URI
+6. The image is pushed to Amazon ECR with the `latest` tag
 
----
-
-# Technologies Used
-
-- AWS ECR
-- GitHub Actions
-- Docker
-- IAM Roles
-- OIDC Authentication
-- Linux / WSL Ubuntu
-- GitHub
-- Nginx
-
----
-
-# Project Structure
+## Project structure
 
 ```bash
-.
-├── .github
-│   └── workflows
-│       └── build-and-push.yml
-│
-├── github-actions-ecr-cicd
-│   ├── Dockerfile
-│   └── app
-│       └── index.html
-```
-
----
-
-# How the Pipeline Works
-
-```text
-Code Push
-   ↓
-GitHub Actions Triggered
-   ↓
-Docker Image Built
-   ↓
-Authenticate to AWS using OIDC
-   ↓
-Push Image to Amazon ECR
-```
-
----
-
-# Workflow Explanation
-
-## 1. GitHub Actions Workflow
-
-The workflow file is stored in:
-
-```text
 .github/workflows/build-and-push.yml
-```
 
-GitHub automatically detects workflows from this location and runs the pipeline on every push to the `main` branch.
-
----
-
-## 2. Docker Build
-
-GitHub Actions automatically builds the Docker image using the Dockerfile inside:
-
-```text
 github-actions-ecr-cicd/
-```
-
-The image contains a simple Nginx website.
-
----
-
-## 3. Secure AWS Authentication
-
-Instead of storing AWS access keys inside GitHub Secrets, this project uses:
-
-- IAM Role
-- OIDC Authentication
-
-This allows GitHub Actions to securely authenticate to AWS without permanent credentials.
-
----
-
-## 4. Push to Amazon ECR
-
-After building the image:
-
-- GitHub logs into Amazon ECR
-- Tags the image
-- Pushes it automatically to AWS
-
-The image is then stored inside the ECR repository.
-
----
-
-# What I Learned
-
-- GitHub Actions basics
-- CI/CD workflow automation
-- Docker build automation
-- Amazon ECR integration
-- OIDC authentication with AWS
-- IAM roles for GitHub Actions
-- Debugging CI/CD pipelines
-- Proper GitHub Actions workflow structure
-
----
-
-# Future Improvements
-
-- Automatic deployment to EC2
-- Multi-container applications
-- ECS or Kubernetes deployments
-- Monitoring and logging
-- Terraform automation for CI/CD infrastructure
-
----
-
-# Author
-
-Marwan Kalboneh  
-Computer Science Student — Budapest University of Technology and Economics
+├── Dockerfile
+└── app/
+    └── index.html
