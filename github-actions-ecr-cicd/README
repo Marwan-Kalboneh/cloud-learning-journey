@@ -22,7 +22,4 @@ When I push changes to the `main` branch:
 ```bash
 .github/workflows/build-and-push.yml
 
-github-actions-ecr-cicd/
-├── Dockerfile
-└── app/
-    └── index.html
+
