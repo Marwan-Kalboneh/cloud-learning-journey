@@ -57,7 +57,7 @@ GitHub Actions handles the CI/CD pipeline:
 
 ## Deployment Flow
 
-When I update the website code and push to the `main` branch, GitHub Actions automatically rebuilds and redeploys the application.
+When I update the website code and push to the main branch, GitHub Actions automatically rebuilds and redeploys the application.
 
 This means I do not need to manually SSH into the server every time I want to update the website.
 
@@ -101,13 +101,13 @@ This means I do not need to manually SSH into the server every time I want to up
 
 ## Key Things I Learned
 
-- How to connect GitHub Actions to AWS without long-term AWS access keys using OIDC
+- How to connect GitHub Actions to AWS without long term AWS access keys using OIDC
 - How Docker images are built, tagged, and pushed to Amazon ECR
 - How EC2 can pull and run images from a private ECR repository
 - How SSH can be used inside a deployment pipeline
 - How Terraform can create repeatable cloud infrastructure
-- How CI/CD connects code changes to real infrastructure updates
-- Why `.terraform`, `.tfstate`, provider binaries, and secrets should not be committed to GitHub
+- How CI CD connects code changes to real infrastructure updates
+- Why .terraform, .tfstate, provider binaries, and secrets should not be committed to GitHub
 
 ## Security Notes
 
@@ -121,4 +121,4 @@ This means I do not need to manually SSH into the server every time I want to up
 
 Completed.
 
-The final test confirmed that changing the website from Version 1.0 to Version 2.0 triggered the GitHub Actions workflow and updated the live EC2-hosted website automatically.
+The final test confirmed that changing the website from Version 1.0 to Version 2.0 triggered the GitHub Actions workflow and updated the live EC2 hosted website automatically.
