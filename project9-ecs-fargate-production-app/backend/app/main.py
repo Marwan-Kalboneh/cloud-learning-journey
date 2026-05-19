@@ -7,10 +7,15 @@ from pydantic import BaseModel
 app = FastAPI()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
+memory_tasks = []
 
 
 class TaskCreate(BaseModel):
     title: str
+
+
+def database_enabled():
+    return DATABASE_URL is not None and DATABASE_URL.strip() != ""
 
 
 def get_connection():
@@ -18,6 +23,9 @@ def get_connection():
 
 
 def init_db():
+    if not database_enabled():
+        return
+
     for _ in range(10):
         try:
             conn = get_connection()
@@ -45,19 +53,37 @@ def startup_event():
 
 @app.get("/api/health")
 def health_check():
+    if not database_enabled():
+        return {
+            "status": "healthy",
+            "database": "not configured",
+            "mode": "memory"
+        }
+
     try:
         conn = get_connection()
         cur = conn.cursor()
         cur.execute("SELECT 1;")
         cur.close()
         conn.close()
-        return {"status": "healthy", "database": "connected"}
+        return {
+            "status": "healthy",
+            "database": "connected",
+            "mode": "postgres"
+        }
     except Exception:
-        return {"status": "unhealthy", "database": "disconnected"}
+        return {
+            "status": "unhealthy",
+            "database": "disconnected",
+            "mode": "postgres"
+        }
 
 
 @app.get("/api/tasks")
 def get_tasks():
+    if not database_enabled():
+        return {"tasks": memory_tasks}
+
     conn = get_connection()
     cur = conn.cursor()
     cur.execute("SELECT id, title FROM tasks ORDER BY id DESC;")
@@ -75,6 +101,14 @@ def get_tasks():
 
 @app.post("/api/tasks")
 def create_task(task: TaskCreate):
+    if not database_enabled():
+        new_task = {
+            "id": len(memory_tasks) + 1,
+            "title": task.title
+        }
+        memory_tasks.insert(0, new_task)
+        return {"message": "task created", "title": task.title, "mode": "memory"}
+
     conn = get_connection()
     cur = conn.cursor()
     cur.execute("INSERT INTO tasks (title) VALUES (%s);", (task.title,))
@@ -82,4 +116,4 @@ def create_task(task: TaskCreate):
     cur.close()
     conn.close()
 
-    return {"message": "task created", "title": task.title}
+    return {"message": "task created", "title": task.title, "mode": "postgres"}
