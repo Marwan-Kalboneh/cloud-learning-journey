@@ -17,3 +17,7 @@ output "alb_dns_name" {
 output "frontend_target_group_arn" {
   value = aws_lb_target_group.frontend.arn
 }
+
+output "github_actions_role_arn" {
+  value = aws_iam_role.github_actions.arn
+}
