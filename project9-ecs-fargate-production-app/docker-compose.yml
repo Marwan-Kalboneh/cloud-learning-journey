@@ -1,0 +1,35 @@
+services:
+  frontend:
+    build: ./frontend
+    container_name: project9-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+
+  backend:
+    build: ./backend
+    container_name: project9-backend
+    environment:
+      DATABASE_URL: postgresql://project9:project9@db:5432/project9
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16-alpine
+    container_name: project9-db
+    environment:
+      POSTGRES_USER: project9
+      POSTGRES_PASSWORD: project9
+      POSTGRES_DB: project9
+    volumes:
+      - project9-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U project9 -d project9"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  project9-db-data:
