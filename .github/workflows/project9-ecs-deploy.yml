@@ -1,0 +1,83 @@
+name: Project 9 - ECS Fargate CI/CD
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "project9-ecs-fargate-production-app/frontend/**"
+      - "project9-ecs-fargate-production-app/backend/**"
+      - ".github/workflows/project9-ecs-deploy.yml"
+
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AWS_REGION: eu-central-1
+  AWS_ACCOUNT_ID: "883886326619"
+  FRONTEND_ECR_REPOSITORY: project9-frontend
+  BACKEND_ECR_REPOSITORY: project9-backend
+  ECS_CLUSTER: project9-ecs-cluster
+  FRONTEND_SERVICE: project9-frontend-service
+  BACKEND_SERVICE: project9-backend-service
+
+jobs:
+  deploy:
+    name: Build, Push, and Deploy to ECS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials using OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.PROJECT9_AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push frontend image
+        run: |
+          docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$FRONTEND_ECR_REPOSITORY:latest ./project9-ecs-fargate-production-app/frontend
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$FRONTEND_ECR_REPOSITORY:latest
+
+      - name: Build and push backend image
+        run: |
+          docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$BACKEND_ECR_REPOSITORY:latest ./project9-ecs-fargate-production-app/backend
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$BACKEND_ECR_REPOSITORY:latest
+
+      - name: Force new ECS frontend deployment
+        run: |
+          aws ecs update-service \
+            --cluster $ECS_CLUSTER \
+            --service $FRONTEND_SERVICE \
+            --force-new-deployment \
+            --region $AWS_REGION
+
+      - name: Force new ECS backend deployment
+        run: |
+          aws ecs update-service \
+            --cluster $ECS_CLUSTER \
+            --service $BACKEND_SERVICE \
+            --force-new-deployment \
+            --region $AWS_REGION
+
+      - name: Wait for frontend service stability
+        run: |
+          aws ecs wait services-stable \
+            --cluster $ECS_CLUSTER \
+            --services $FRONTEND_SERVICE \
+            --region $AWS_REGION
+
+      - name: Wait for backend service stability
+        run: |
+          aws ecs wait services-stable \
+            --cluster $ECS_CLUSTER \
+            --services $BACKEND_SERVICE \
+            --region $AWS_REGION
