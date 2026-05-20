@@ -2,24 +2,46 @@
 
 This repository contains cloud and DevOps projects I built while learning AWS, Terraform, Docker, CI/CD, ECS, and Kubernetes.
 
-The projects start from simple EC2 deployments and move into more complete infrastructure and deployment workflows.
+The projects start with simple EC2 deployments and move toward more complete deployment workflows using containers, infrastructure as code, automation, and Kubernetes.
+
+Each main project has its own README, screenshots, and setup files.
 
 ## Main Projects
 
 ### Kubernetes Deployment Platform
 
-A local Kubernetes deployment for a small frontend, backend, and PostgreSQL app.
+A local Kubernetes deployment for a small frontend, backend, and PostgreSQL application.
 
-What it uses:
+The app runs inside a local kind cluster. The frontend is served with Nginx, the backend is built with FastAPI, and PostgreSQL runs inside the cluster with persistent storage.
+
+The project also includes a Helm chart and a GitHub Actions workflow that validates the Kubernetes configuration.
+
+Main work done:
+
+- Created a local Kubernetes cluster with kind
+- Built frontend and backend Docker images
+- Loaded local Docker images into the kind cluster
+- Deployed frontend, backend, and PostgreSQL with Kubernetes YAML files
+- Used Services for internal communication between containers
+- Used Ingress to expose the app through localhost
+- Added ConfigMap and Secret for application configuration
+- Added a PersistentVolumeClaim for PostgreSQL storage
+- Added readiness and liveness probes
+- Created a Helm chart for the deployment
+- Tested Helm install and Helm upgrade
+- Added GitHub Actions validation using a temporary kind cluster
+
+Tools used:
 
 - Kubernetes
 - kind
 - kubectl
 - Docker
-- Ingress
+- Nginx
+- FastAPI
 - PostgreSQL
 - Helm
-- GitHub Actions validation
+- GitHub Actions
 
 [Open project](./project10-kubernetes-deployment-platform)
 
@@ -27,17 +49,34 @@ What it uses:
 
 ### ECS Fargate App Deployment
 
-A containerized AWS deployment using ECS Fargate, ECR, an Application Load Balancer, Terraform, and GitHub Actions.
+A production-style AWS container deployment using ECS Fargate.
 
-What it uses:
+This project deploys a frontend and backend container to AWS using ECS Fargate. The containers are stored in Amazon ECR, traffic is routed through an Application Load Balancer, and the infrastructure is managed with Terraform.
 
-- ECS Fargate
+GitHub Actions is used to build and push the Docker images, then trigger a new ECS deployment.
+
+Main work done:
+
+- Built frontend and backend Docker images
+- Created ECR repositories for the images
+- Created ECS Fargate services
+- Added an Application Load Balancer
+- Used path-based routing for frontend and backend traffic
+- Added CloudWatch logs for the containers
+- Managed the AWS infrastructure with Terraform
+- Used IAM roles and OIDC for GitHub Actions authentication
+- Created a CI/CD workflow for image build, push, and ECS redeployment
+
+Tools used:
+
+- AWS ECS Fargate
 - Amazon ECR
 - Application Load Balancer
+- CloudWatch
 - Terraform
-- CloudWatch logs
-- IAM and OIDC
-- GitHub Actions CI/CD
+- Docker
+- GitHub Actions
+- IAM / OIDC
 
 [Open project](./project9-ecs-fargate-production-app)
 
@@ -45,17 +84,29 @@ What it uses:
 
 ### EC2 Docker CI/CD Deployment
 
-A CI/CD pipeline that builds a Docker image, pushes it to ECR, connects to an EC2 instance, and redeploys the running container.
+A CI/CD deployment pipeline for a Dockerized web app running on EC2.
 
-What it uses:
+GitHub Actions builds a Docker image, pushes it to Amazon ECR, connects to an EC2 instance through SSH, pulls the latest image, stops the old container, and starts the new one.
 
-- EC2
-- Docker
+Main work done:
+
+- Created AWS infrastructure with Terraform
+- Created an EC2 instance for the app
+- Created an ECR repository for the Docker image
+- Built and pushed Docker images from GitHub Actions
+- Used GitHub OIDC for AWS authentication
+- Used SSH deployment to update the running EC2 container
+- Automated container stop, remove, pull, and restart steps
+
+Tools used:
+
+- AWS EC2
 - Amazon ECR
 - Terraform
+- Docker
 - GitHub Actions
-- SSH deployment
-- AWS OIDC
+- SSH
+- IAM / OIDC
 
 [Open project](./project8-full-cicd-deploy)
 
@@ -65,30 +116,57 @@ What it uses:
 
 | Project | Focus | Link |
 |---|---|---|
-| GitHub Actions to ECR | Build and push Docker images to ECR from GitHub Actions | [Open](./github-actions-ecr-cicd) |
-| VPC Docker Deployment | Custom VPC, subnet, routing, EC2, and Docker | [Open](./terraform-vpc-docker-nginx) |
-| ECR to EC2 Deployment | Push image to ECR and pull it from EC2 | [Open](./terraform-ecr-nginx) |
-| Custom Docker Image | Build and run a custom Nginx Docker image | [Open](./terraform-custom-docker-nginx) |
-| Dockerized Nginx on EC2 | Run Nginx as a Docker container on EC2 | [Open](./terraform-docker-nginx) |
-| Terraform EC2 Nginx | Create EC2 and install Nginx with Terraform | [Open](./terraform-nginx) |
+| GitHub Actions to ECR | Building and pushing Docker images to Amazon ECR from GitHub Actions | [Open](./github-actions-ecr-cicd) |
+| Custom VPC Docker Deployment | Creating a custom VPC, subnet, route table, EC2 instance, and Docker deployment | [Open](./terraform-vpc-docker-nginx) |
+| ECR to EC2 Deployment | Pushing a Docker image to ECR and pulling it from EC2 | [Open](./terraform-ecr-nginx) |
+| Custom Docker Image | Building and running a custom Nginx Docker image | [Open](./terraform-custom-docker-nginx) |
+| Dockerized Nginx on EC2 | Running Nginx as a Docker container on EC2 | [Open](./terraform-docker-nginx) |
+| Terraform EC2 Nginx | Creating EC2 and installing Nginx with Terraform | [Open](./terraform-nginx) |
 | Manual EC2 Nginx | Basic manual EC2 setup with Nginx | [Open](./aws-ec2-nginx) |
 
-## Tools and Topics
+## Tools and Topics Covered
 
-- AWS EC2
-- Amazon ECR
+AWS:
+
+- EC2
+- ECR
 - ECS Fargate
 - Application Load Balancer
 - IAM roles and policies
+- CloudWatch logs
+- Basic VPC networking
+
+Infrastructure and automation:
+
 - Terraform
-- Docker
-- Docker Compose
 - GitHub Actions
-- Kubernetes
+- GitHub OIDC authentication
+- CI/CD pipelines
+- SSH-based deployment
+
+Containers:
+
+- Docker
+- Dockerfiles
+- Docker Compose
+- Container image build and push workflow
+
+Kubernetes:
+
 - kind
 - kubectl
-- Helm
+- Deployments
+- Services
+- Ingress
+- ConfigMaps
+- Secrets
+- PersistentVolumeClaims
+- Readiness and liveness probes
+- Helm charts
+
+Application stack used in projects:
+
 - Nginx
 - FastAPI
 - PostgreSQL
-- Linux / WSL
+- Linux / WSL Ubuntu
