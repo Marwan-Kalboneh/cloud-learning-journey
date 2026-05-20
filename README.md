@@ -1,22 +1,16 @@
 # Cloud Learning Journey
 
-This repository contains my cloud, DevOps, and infrastructure learning projects.
+This repository contains my hands-on cloud, DevOps, and infrastructure projects.
 
-I started with basic EC2 and Nginx deployments, then moved into Terraform, Docker, ECR, GitHub Actions, ECS Fargate, and Kubernetes.
+I started with basic EC2 and Nginx deployments, then moved into Terraform, Docker, Amazon ECR, GitHub Actions, ECS Fargate, and Kubernetes.
 
-The main goal of this repository is to show practical hands-on progress, not just theory.
+The goal of this repository is to show practical progress through real deployments, automation, and infrastructure work.
 
 ## Featured Projects
 
-### 1.  Kubernetes Deployment Platform
+### Kubernetes Deployment Platform
 
-Local Kubernetes deployment using kind, kubectl, Docker, Ingress, PostgreSQL, Helm, and GitHub Actions validation.
-
-Folder:
-
-```text
-project10-kubernetes-deployment-platform
-```
+A local Kubernetes deployment of a frontend, backend, and PostgreSQL application using kind, kubectl, Ingress, Helm, and GitHub Actions validation.
 
 Main things covered:
 
@@ -28,21 +22,15 @@ Main things covered:
 - PersistentVolumeClaim
 - Readiness and liveness probes
 - Helm install and upgrade
-- GitHub Actions validation with a temporary kind cluster
+- GitHub Actions validation using a temporary kind cluster
 
-[Open Project 10](./project10-kubernetes-deployment-platform)
+[Open project](./project10-kubernetes-deployment-platform)
 
 ---
 
-### 2.  ECS Fargate Production App
+### ECS Fargate Production App
 
-Production-style AWS container deployment using ECS Fargate, ECR, ALB, CloudWatch, Terraform, IAM/OIDC, and GitHub Actions CI/CD.
-
-Folder:
-
-```text
-project9-ecs-fargate-production-app
-```
+A production-style AWS container deployment using ECS Fargate, Amazon ECR, Application Load Balancer, CloudWatch, Terraform, IAM/OIDC, and GitHub Actions CI/CD.
 
 Main things covered:
 
@@ -54,49 +42,40 @@ Main things covered:
 - Terraform-managed infrastructure
 - GitHub Actions CI/CD
 
-[Open Project 9](./project9-ecs-fargate-production-app)
+[Open project](./project9-ecs-fargate-production-app)
 
 ---
 
-### 3.  Full CI/CD Deployment on EC2
+### EC2 Full CI/CD Deployment
 
-Full CI/CD pipeline where GitHub Actions builds a Docker image, pushes it to ECR, SSHs into EC2, pulls the new image, and redeploys the container.
-
-Folder:
-
-```text
-project8-full-cicd-deploy
-```
+A CI/CD pipeline where GitHub Actions builds a Docker image, pushes it to Amazon ECR, connects to EC2, pulls the latest image, and redeploys the running container.
 
 Main things covered:
 
 - Terraform
 - EC2
 - Docker
-- ECR
+- Amazon ECR
 - GitHub Actions
 - AWS OIDC
 - SSH-based deployment
 - Automated container redeployment
 
-[Open Project 8](./project8-full-cicd-deploy)
+[Open project](./project8-full-cicd-deploy)
 
 ---
 
-## Full Project List
+## Other Projects
 
-| Project | Folder | Main focus |
+| Project | Main focus | Link |
 |---|---|---|
-| Project  | project10-kubernetes-deployment-platform | Kubernetes, Helm, Ingress, GitHub Actions validation |
-| Project  | project9-ecs-fargate-production-app | ECS Fargate, ALB, ECR, Terraform, CI/CD |
-| Project  | project8-full-cicd-deploy | EC2 Docker CI/CD with GitHub Actions and ECR |
-| Project  | github-actions-ecr-cicd | GitHub Actions building and pushing Docker images to ECR |
-| Project  | terraform-vpc-docker-nginx | Custom VPC, subnet, routing, EC2, Docker |
-| Project  | terraform-ecr-nginx | ECR image deployment to EC2 |
-| Project  | terraform-custom-docker-nginx | Custom Docker image with Nginx |
-| Project  | terraform-docker-nginx | Dockerized Nginx on EC2 |
-| Project  | terraform-nginx | Terraform EC2 and Nginx |
-| Project  | aws-ec2-nginx | Manual EC2 and Nginx setup |
+| GitHub Actions to ECR Pipeline | GitHub Actions building and pushing Docker images to ECR | [Open](./github-actions-ecr-cicd) |
+| Custom VPC Docker Deployment | VPC, subnet, routing, EC2, and Docker | [Open](./terraform-vpc-docker-nginx) |
+| ECR Image Deployment to EC2 | Docker image pushed to ECR and pulled by EC2 | [Open](./terraform-ecr-nginx) |
+| Custom Docker Image Deployment | Custom Nginx image built with Dockerfile | [Open](./terraform-custom-docker-nginx) |
+| Dockerized Nginx on EC2 | Docker container running Nginx on EC2 | [Open](./terraform-docker-nginx) |
+| Terraform EC2 and Nginx | EC2 and Nginx created with Terraform | [Open](./terraform-nginx) |
+| Manual EC2 and Nginx | Basic manual EC2 setup with Nginx | [Open](./aws-ec2-nginx) |
 
 ## Skills Practiced
 
@@ -122,23 +101,23 @@ Main things covered:
 
 ## Notes
 
-Some older projects are simpler and were built earlier in the learning process.
+The older projects are simpler because they were built earlier in the learning process.
 
-The strongest projects are:
+The strongest projects in this repository are:
 
-1. Project 10 - Kubernetes Deployment Platform
-2. Project 9 - ECS Fargate Production App
-3. Project 8 - Full CI/CD Deployment on EC2
+- Kubernetes Deployment Platform
+- ECS Fargate Production App
+- EC2 Full CI/CD Deployment
 
-These are the projects I would mainly discuss for cloud, DevOps, infrastructure, or platform engineering internship applications.
+These are the main projects I would discuss for cloud, DevOps, infrastructure, or platform engineering internship applications.
 
 ## Current Status
 
-- Project 8 completed and documented
-- Project 9 completed and documented
-- Project 10 completed and documented
-- GitHub Actions validation added for Project 10
-- AWS resources from Project 8 and Project 9 were destroyed after saving proof to avoid ongoing cost
+- EC2 CI/CD project completed and documented
+- ECS Fargate project completed and documented
+- Kubernetes project completed and documented
+- GitHub Actions validation added for the Kubernetes project
+- AWS resources from the AWS projects were destroyed after saving proof to avoid ongoing cost
 
 ## Next Improvements
 
@@ -147,5 +126,5 @@ Possible next steps:
 - Clean up older project READMEs
 - Add better screenshots to older projects
 - Add CV-ready project bullets
-- Add a short architecture diagram for the strongest projects
-- Later: extend Project 10 to AWS EKS
+- Add simple architecture diagrams for the strongest projects
+- Later: extend the Kubernetes project to AWS EKS
