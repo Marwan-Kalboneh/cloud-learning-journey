@@ -81,38 +81,15 @@ This project includes:
 
 ## Project structure
 
-```text
-project10-kubernetes-deployment-platform/
-├── backend/
-│   ├── Dockerfile
-│   ├── requirements.txt
-│   └── app/
-│       ├── __init__.py
-│       └── main.py
-├── frontend/
-│   ├── Dockerfile
-│   └── index.html
-├── k8s/
-│   ├── namespace.yaml
-│   ├── configmap.yaml
-│   ├── secret.yaml
-│   ├── postgres-pvc.yaml
-│   ├── postgres-deployment.yaml
-│   ├── postgres-service.yaml
-│   ├── backend-deployment.yaml
-│   ├── backend-service.yaml
-│   ├── frontend-deployment.yaml
-│   ├── frontend-service.yaml
-│   └── ingress.yaml
-├── helm/
-│   └── project10/
-│       ├── Chart.yaml
-│       ├── values.yaml
-│       └── templates/
-├── screenshots/
-├── kind-config.yaml
-└── README.md
-```
+The project is split into a few main folders:
+
+- backend contains the FastAPI application and its Dockerfile.
+- frontend contains the simple Nginx frontend page and its Dockerfile.
+- k8s contains the Kubernetes YAML files.
+- helm/project10 contains the Helm chart.
+- screenshots contains proof of the project working.
+
+I kept the Kubernetes YAML files separate first so I could understand what each object does before moving the same setup into Helm.
 
 ## Running the project locally
 
