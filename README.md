@@ -8,7 +8,7 @@ The main goal of this repository is to show practical hands-on progress, not jus
 
 ## Featured Projects
 
-### 1. Project 10 - Kubernetes Deployment Platform
+### 1.  Kubernetes Deployment Platform
 
 Local Kubernetes deployment using kind, kubectl, Docker, Ingress, PostgreSQL, Helm, and GitHub Actions validation.
 
@@ -34,7 +34,7 @@ Main things covered:
 
 ---
 
-### 2. Project 9 - ECS Fargate Production App
+### 2.  ECS Fargate Production App
 
 Production-style AWS container deployment using ECS Fargate, ECR, ALB, CloudWatch, Terraform, IAM/OIDC, and GitHub Actions CI/CD.
 
@@ -58,7 +58,7 @@ Main things covered:
 
 ---
 
-### 3. Project 8 - Full CI/CD Deployment on EC2
+### 3.  Full CI/CD Deployment on EC2
 
 Full CI/CD pipeline where GitHub Actions builds a Docker image, pushes it to ECR, SSHs into EC2, pulls the new image, and redeploys the container.
 
@@ -87,16 +87,16 @@ Main things covered:
 
 | Project | Folder | Main focus |
 |---|---|---|
-| Project 10 | project10-kubernetes-deployment-platform | Kubernetes, Helm, Ingress, GitHub Actions validation |
-| Project 9 | project9-ecs-fargate-production-app | ECS Fargate, ALB, ECR, Terraform, CI/CD |
-| Project 8 | project8-full-cicd-deploy | EC2 Docker CI/CD with GitHub Actions and ECR |
-| Project 7 | github-actions-ecr-cicd | GitHub Actions building and pushing Docker images to ECR |
-| Project 6 | terraform-vpc-docker-nginx | Custom VPC, subnet, routing, EC2, Docker |
-| Project 5 | terraform-ecr-nginx | ECR image deployment to EC2 |
-| Project 4 | terraform-custom-docker-nginx | Custom Docker image with Nginx |
-| Project 3 | terraform-docker-nginx | Dockerized Nginx on EC2 |
-| Project 2 | terraform-nginx | Terraform EC2 and Nginx |
-| Project 1 | aws-ec2-nginx | Manual EC2 and Nginx setup |
+| Project  | project10-kubernetes-deployment-platform | Kubernetes, Helm, Ingress, GitHub Actions validation |
+| Project  | project9-ecs-fargate-production-app | ECS Fargate, ALB, ECR, Terraform, CI/CD |
+| Project  | project8-full-cicd-deploy | EC2 Docker CI/CD with GitHub Actions and ECR |
+| Project  | github-actions-ecr-cicd | GitHub Actions building and pushing Docker images to ECR |
+| Project  | terraform-vpc-docker-nginx | Custom VPC, subnet, routing, EC2, Docker |
+| Project  | terraform-ecr-nginx | ECR image deployment to EC2 |
+| Project  | terraform-custom-docker-nginx | Custom Docker image with Nginx |
+| Project  | terraform-docker-nginx | Dockerized Nginx on EC2 |
+| Project  | terraform-nginx | Terraform EC2 and Nginx |
+| Project  | aws-ec2-nginx | Manual EC2 and Nginx setup |
 
 ## Skills Practiced
 
