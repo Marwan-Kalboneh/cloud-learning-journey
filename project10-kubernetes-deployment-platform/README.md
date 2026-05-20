@@ -14,7 +14,7 @@ The app has three main parts:
 - A backend API built with FastAPI
 - A PostgreSQL database
 
-The frontend can call the backend through `/api`, and the backend stores tasks in PostgreSQL.
+The frontend can call the backend through /api, and the backend stores tasks in PostgreSQL.
 
 I tested it by adding a task from the browser and then checking that it was returned from the API.
 
@@ -214,7 +214,7 @@ The workflow:
 - Installs kubectl
 - Installs kind
 - Creates a temporary Kubernetes cluster
-- Runs `helm lint`
+- Runs helm lint
 - Renders the Helm templates
 - Runs Kubernetes dry-run validation
 - Runs Helm dry-run install
@@ -277,19 +277,19 @@ The first version of the workflow failed because GitHub Actions did not have a K
 
 ### kubectl was missing
 
-At the start, `kubectl` was not installed in WSL, so I installed it first.
+At the start, kubectl was not installed in WSL, so I installed it first.
 
 ### kind was missing
 
-`kind` was also not installed, so I installed the Linux binary manually.
+kind was also not installed, so I installed the Linux binary manually.
 
 ### I accidentally broke the frontend file
 
-While creating files from the terminal, I accidentally pasted Dockerfile content into `index.html`. I fixed it by overwriting the frontend files cleanly and rebuilding the image.
+While creating files from the terminal, I accidentally pasted Dockerfile content into index.html. I fixed it by overwriting the frontend files cleanly and rebuilding the image.
 
 ### Some Kubernetes resources failed the first time
 
-When I first ran `kubectl apply -f k8s/`, some resources failed because the namespace had just been created. Running the apply command again fixed it.
+When I first ran kubectl apply -f k8s/, some resources failed because the namespace had just been created. Running the apply command again fixed it.
 
 ### Backend restarted before PostgreSQL was ready
 
