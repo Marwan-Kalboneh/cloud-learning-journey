@@ -1,50 +1,53 @@
 # Project 10 - Kubernetes Deployment Platform
 
-This project deploys a multi-container application on Kubernetes using a local `kind` cluster.
+This project is a local Kubernetes deployment of a small frontend + backend + PostgreSQL application.
 
-The application includes:
+I built it after working with EC2, ECR, GitHub Actions, and ECS Fargate, because I wanted to understand the basic Kubernetes workflow before jumping directly into AWS EKS.
 
-- Frontend container using Nginx
-- Backend API using FastAPI
-- PostgreSQL database
-- Kubernetes Deployments
-- Kubernetes Services
-- Ingress routing
-- ConfigMap and Secret
-- PersistentVolumeClaim for database storage
-- Readiness and liveness probes
-- Helm chart deployment
-- GitHub Actions validation workflow
+The goal was not to make a huge production system. The goal was to understand the main Kubernetes objects properly and have a working project that I can explain.
 
-## Goal
+## What the app does
 
-The goal of this project was to move from Docker Compose and ECS-style deployments into Kubernetes.
+The app has three main parts:
 
-Instead of only running containers manually, this project shows how an application can be deployed and managed using Kubernetes objects such as Pods, Deployments, Services, Ingress, ConfigMaps, Secrets, PersistentVolumeClaims, probes, and Helm.
+- A frontend served by Nginx
+- A backend API built with FastAPI
+- A PostgreSQL database
+
+The frontend can call the backend through `/api`, and the backend stores tasks in PostgreSQL.
+
+I tested it by adding a task from the browser and then checking that it was returned from the API.
 
 ## Architecture
 
 ```text
-Browser / curl
-        ↓
+Browser
+  ↓
+localhost:8081
+  ↓
 Kubernetes Ingress
-        ↓
+  ↓
 Frontend Service
-        ↓
+  ↓
 Frontend Pod
-        ↓
+
+/api requests:
+Browser
+  ↓
+Ingress
+  ↓
 Backend Service
-        ↓
+  ↓
 Backend Pod
-        ↓
+  ↓
 PostgreSQL Service
-        ↓
+  ↓
 PostgreSQL Pod
-        ↓
+  ↓
 PersistentVolumeClaim
 ```
 
-## Technologies Used
+## Tools used
 
 - Kubernetes
 - kind
@@ -57,22 +60,26 @@ PersistentVolumeClaim
 - GitHub Actions
 - WSL Ubuntu
 
-## Main Features
+## What I built
 
-- Created a local Kubernetes cluster using kind
-- Built frontend and backend Docker images locally
-- Loaded local Docker images into the kind cluster
-- Deployed frontend, backend, and PostgreSQL using Kubernetes manifests
-- Used Kubernetes Services for internal communication
-- Used Ingress to expose the app on `localhost:8081`
-- Connected the backend to PostgreSQL inside the cluster
-- Added tasks from the browser and stored them in PostgreSQL
-- Added readiness and liveness probes
-- Created a Helm chart for cleaner deployment
-- Used Helm upgrade to scale frontend replicas
-- Added a GitHub Actions workflow to validate Kubernetes and Helm configuration
+This project includes:
 
-## Project Structure
+- A local Kubernetes cluster using kind
+- Frontend and backend Docker images
+- Kubernetes manifests for the app
+- Namespace
+- ConfigMap
+- Secret
+- Deployments
+- Services
+- Ingress
+- PersistentVolumeClaim
+- Readiness and liveness probes
+- Helm chart
+- Helm upgrade test
+- GitHub Actions validation workflow
+
+## Project structure
 
 ```text
 project10-kubernetes-deployment-platform/
@@ -85,11 +92,6 @@ project10-kubernetes-deployment-platform/
 ├── frontend/
 │   ├── Dockerfile
 │   └── index.html
-├── helm/
-│   └── project10/
-│       ├── Chart.yaml
-│       ├── values.yaml
-│       └── templates/
 ├── k8s/
 │   ├── namespace.yaml
 │   ├── configmap.yaml
@@ -102,12 +104,17 @@ project10-kubernetes-deployment-platform/
 │   ├── frontend-deployment.yaml
 │   ├── frontend-service.yaml
 │   └── ingress.yaml
+├── helm/
+│   └── project10/
+│       ├── Chart.yaml
+│       ├── values.yaml
+│       └── templates/
 ├── screenshots/
 ├── kind-config.yaml
 └── README.md
 ```
 
-## Local Kubernetes Setup
+## Running the project locally
 
 Create the kind cluster:
 
@@ -115,33 +122,33 @@ Create the kind cluster:
 kind create cluster --config kind-config.yaml
 ```
 
-Check the cluster:
+Check that the cluster is running:
 
 ```bash
 kubectl get nodes
 ```
 
-Build Docker images:
+Build the Docker images:
 
 ```bash
 docker build -t project10-backend:latest ./backend
 docker build -t project10-frontend:latest ./frontend
 ```
 
-Load images into kind:
+Load the images into the kind cluster:
 
 ```bash
 kind load docker-image project10-backend:latest --name project10
 kind load docker-image project10-frontend:latest --name project10
 ```
 
-Apply Kubernetes manifests:
+Apply the Kubernetes files:
 
 ```bash
 kubectl apply -f k8s/
 ```
 
-Check resources:
+Check the pods and services:
 
 ```bash
 kubectl get pods -n project10
@@ -149,7 +156,7 @@ kubectl get svc -n project10
 kubectl get ingress -n project10
 ```
 
-Test backend health through Ingress:
+Test the backend through Ingress:
 
 ```bash
 curl http://localhost:8081/api/health
@@ -161,58 +168,54 @@ Expected result:
 {"status":"healthy","database":"connected"}
 ```
 
-Test stored tasks:
+The app can also be opened in the browser:
 
-```bash
-curl http://localhost:8081/api/tasks
+```text
+http://localhost:8081
 ```
 
-Example result:
+## Helm
 
-```json
-[{"id":1,"title":"eat"}]
-```
+After the normal Kubernetes YAML deployment worked, I also created a Helm chart for the same app.
 
-## Helm Deployment
-
-The project also includes a Helm chart.
-
-Install the app with Helm:
+Install with Helm:
 
 ```bash
 helm install project10 ./helm/project10 --namespace project10 --create-namespace
 ```
 
-Check Helm release:
+Check the Helm release:
 
 ```bash
 helm list -n project10
 ```
 
-Upgrade the deployment and scale the frontend:
+I also tested a Helm upgrade by scaling the frontend from 1 pod to 2 pods:
 
 ```bash
 helm upgrade project10 ./helm/project10 -n project10 --set frontend.replicas=2
 ```
 
-Check pods:
+Then I checked the pods:
 
 ```bash
 kubectl get pods -n project10
 ```
 
-## GitHub Actions Validation
+This showed two frontend pods running, which confirmed the Helm upgrade worked.
 
-The project includes a GitHub Actions workflow that validates the Kubernetes configuration.
+## GitHub Actions
 
-The workflow does the following:
+I added a GitHub Actions workflow for validation.
+
+The workflow:
 
 - Installs Helm
 - Installs kubectl
 - Installs kind
 - Creates a temporary Kubernetes cluster
-- Runs Helm lint
-- Renders Helm templates
+- Runs `helm lint`
+- Renders the Helm templates
 - Runs Kubernetes dry-run validation
 - Runs Helm dry-run install
 
@@ -221,6 +224,8 @@ Workflow file:
 ```text
 .github/workflows/project10-kubernetes-validation.yml
 ```
+
+The first version of the workflow failed because GitHub Actions did not have a Kubernetes cluster available. I fixed it by creating a temporary kind cluster inside the workflow.
 
 ## Screenshots
 
@@ -236,9 +241,9 @@ Workflow file:
 
 ![API health through Ingress](screenshots/03-api-health-through-ingress.png)
 
-### Application running in browser
+### App running in browser
 
-![Application running in browser](screenshots/04-app-running-in-browser.png)
+![App running in browser](screenshots/04-app-running-in-browser.png)
 
 ### API tasks through Ingress
 
@@ -260,73 +265,73 @@ Workflow file:
 
 ![Helm upgrade success](screenshots/09-helm-upgrade-success.png)
 
-### GitHub Actions validation failed before fix
+### GitHub Actions failed before fix
 
-![GitHub Actions validation failed before fix](screenshots/10-github-actions-validation-failed-before-fix.png)
+![GitHub Actions failed before fix](screenshots/10-github-actions-validation-failed-before-fix.png)
 
 ### GitHub Actions validation success
 
 ![GitHub Actions validation success](screenshots/11-github-actions-validation-success.png)
 
-## Problems Faced and Fixed
+## Problems I ran into
 
-### kubectl was not installed
+### kubectl was missing
 
-At the start, `kubectl` was missing in WSL, so it was installed using the Kubernetes apt repository.
+At the start, `kubectl` was not installed in WSL, so I installed it first.
 
-### kind was not installed
+### kind was missing
 
-`kind` was also missing, so it was installed manually using the Linux binary.
+`kind` was also not installed, so I installed the Linux binary manually.
 
-### Frontend file was accidentally overwritten incorrectly
+### I accidentally broke the frontend file
 
-The frontend `index.html` was accidentally mixed with Dockerfile content. It was fixed by overwriting the frontend files cleanly.
+While creating files from the terminal, I accidentally pasted Dockerfile content into `index.html`. I fixed it by overwriting the frontend files cleanly and rebuilding the image.
 
-### Namespace error during kubectl apply
+### Some Kubernetes resources failed the first time
 
-Some resources failed during the first `kubectl apply` because the namespace had just been created. Running `kubectl apply -f k8s/` again fixed it.
+When I first ran `kubectl apply -f k8s/`, some resources failed because the namespace had just been created. Running the apply command again fixed it.
 
 ### Backend restarted before PostgreSQL was ready
 
-The backend temporarily entered restart/backoff because PostgreSQL was still starting. After PostgreSQL became ready, the backend recovered and stayed running.
+The backend restarted a few times because PostgreSQL was still starting. After the database became ready, the backend connected successfully and stayed running.
 
-### GitHub Actions failed first
+### GitHub Actions failed the first time
 
-The first workflow failed because GitHub Actions did not have a Kubernetes cluster available. The fix was to create a temporary kind cluster inside the workflow before running validation.
+The first GitHub Actions validation failed because there was no Kubernetes cluster in the GitHub runner. I fixed this by making the workflow create a temporary kind cluster before running validation.
 
-## What I Learned
+## What I learned
 
-In this project, I learned how Kubernetes manages containers differently from Docker Compose and ECS.
+This project helped me understand the basic Kubernetes workflow much better.
 
-Important concepts practiced:
+The main things I practiced were:
 
-- A Pod runs containers
-- A Deployment keeps the desired number of Pods running
-- A Service gives stable networking to Pods
-- Ingress exposes HTTP traffic into the cluster
-- ConfigMaps store non-secret configuration
-- Secrets store sensitive configuration
-- PVCs request persistent storage
-- Readiness probes decide when a Pod can receive traffic
-- Liveness probes decide when Kubernetes should restart a container
-- Helm packages Kubernetes YAML into a reusable chart
-- GitHub Actions can validate Kubernetes configuration before deployment
+- Pods are where containers actually run
+- Deployments keep the desired number of pods running
+- Services give stable networking to pods
+- Ingress routes HTTP traffic into the cluster
+- ConfigMaps are for normal configuration
+- Secrets are for sensitive values
+- PVCs are used for persistent storage
+- Readiness probes control when a pod receives traffic
+- Liveness probes help Kubernetes restart unhealthy containers
+- Helm makes Kubernetes YAML easier to reuse and upgrade
+- GitHub Actions can validate Kubernetes configs before merging changes
 
-## Future Improvements
+## Future improvements
 
-Possible next steps:
+Things I could add later:
 
 - Deploy the same app to AWS EKS
 - Push images to Amazon ECR
 - Use AWS Load Balancer Controller
-- Add HTTPS with a certificate
-- Add automated backend tests
-- Use separate dev and prod Helm values
-- Add monitoring and alerts
-- Replace local PostgreSQL with managed RDS in a cloud deployment
+- Add HTTPS
+- Add backend tests
+- Add separate dev and prod Helm values
+- Add monitoring
+- Replace local PostgreSQL with RDS in the cloud version
 
-## Project Summary
+## Summary
 
-This project demonstrates a complete local Kubernetes deployment workflow for a frontend, backend, and database application.
+This project was my first proper Kubernetes deployment project.
 
-It includes Kubernetes manifests, Ingress routing, persistent database storage, health probes, Helm deployment, Helm upgrade, and GitHub Actions validation.
+It runs a frontend, backend, and PostgreSQL database inside a local kind cluster. It also includes Ingress routing, health probes, persistent storage, Helm deployment, Helm upgrade, and GitHub Actions validation.
