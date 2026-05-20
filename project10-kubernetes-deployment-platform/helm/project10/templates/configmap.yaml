@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: project10-config
+  namespace: project10
+data:
+  POSTGRES_DB: project10
+  POSTGRES_USER: project10
+  DATABASE_URL: postgresql://project10:project10@postgres-service:5432/project10

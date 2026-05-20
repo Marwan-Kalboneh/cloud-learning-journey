@@ -1,0 +1,42 @@
+name: Project 10 - Kubernetes Validation
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "project10-kubernetes-deployment-platform/**"
+      - ".github/workflows/project10-kubernetes-validation.yml"
+  workflow_dispatch:
+
+jobs:
+  validate-kubernetes:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Helm
+        run: |
+          curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-4
+          chmod 700 get_helm.sh
+          ./get_helm.sh
+
+      - name: Install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.36.1/bin/linux/amd64/kubectl"
+          chmod +x kubectl
+          sudo mv kubectl /usr/local/bin/kubectl
+
+      - name: Helm lint
+        run: |
+          helm lint ./project10-kubernetes-deployment-platform/helm/project10
+
+      - name: Render Helm templates
+        run: |
+          helm template project10 ./project10-kubernetes-deployment-platform/helm/project10
+
+      - name: Validate Kubernetes YAML syntax
+        run: |
+          kubectl apply --dry-run=client --validate=false -f ./project10-kubernetes-deployment-platform/k8s/

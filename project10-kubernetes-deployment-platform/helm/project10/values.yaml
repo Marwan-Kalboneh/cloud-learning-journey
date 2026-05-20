@@ -1,0 +1,18 @@
+namespace: project10
+
+frontend:
+  image: project10-frontend:latest
+  replicas: 1
+  port: 80
+
+backend:
+  image: project10-backend:latest
+  replicas: 1
+  port: 8000
+
+postgres:
+  image: postgres:16-alpine
+  database: project10
+  username: project10
+  password: project10
+  storage: 1Gi

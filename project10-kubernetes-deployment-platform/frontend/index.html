@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Project 10 - Kubernetes Deployment Platform</title>
+</head>
+<body>
+  <h1>Project 10: Kubernetes Deployment Platform</h1>
+  <p>This frontend is running inside Kubernetes.</p>
+
+  <h2>Backend Health</h2>
+  <p id="health">Checking...</p>
+
+  <h2>Add Task</h2>
+  <input id="taskInput" placeholder="Enter task">
+  <button onclick="addTask()">Add</button>
+
+  <h2>Tasks</h2>
+  <ul id="tasks"></ul>
+
+  <script>
+    async function checkHealth() {
+      try {
+        const res = await fetch('/api/health');
+        const data = await res.json();
+        document.getElementById('health').innerText =
+          data.status + ' - Database: ' + data.database;
+      } catch {
+        document.getElementById('health').innerText = 'Backend unreachable';
+      }
+    }
+
+    async function loadTasks() {
+      try {
+        const res = await fetch('/api/tasks');
+        const tasks = await res.json();
+        const list = document.getElementById('tasks');
+        list.innerHTML = '';
+        tasks.forEach(task => {
+          const li = document.createElement('li');
+          li.innerText = task.title;
+          list.appendChild(li);
+        });
+      } catch {}
+    }
+
+    async function addTask() {
+      const input = document.getElementById('taskInput');
+      const title = input.value.trim();
+      if (!title) return;
+
+      await fetch('/api/tasks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title })
+      });
+
+      input.value = '';
+      loadTasks();
+    }
+
+    checkHealth();
+    loadTasks();
+  </script>
+</body>
+</html>
